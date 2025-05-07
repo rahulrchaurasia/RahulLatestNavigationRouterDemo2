@@ -35,5 +35,12 @@ enum HomeFlow: Hashable {
     case profile
     case dishDetails(dishId: String) // ✅ parameter added
     case product
+    case restaurants
+    case scrollTabSample
+    case collapsingToolbarSample(title : String, subtitle : String?,rating : String,
+                                 details : String? ,image : String ,
+                                 expandedHeight : CGFloat )
     
 }
+
+

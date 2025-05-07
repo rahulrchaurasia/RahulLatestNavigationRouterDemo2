@@ -16,52 +16,74 @@ struct DishDetailView: View {
        
     var body: some View {
         
-        VStack(spacing:20){
-            Text("DishDetailView")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.blue)
-                .padding(.top,20)
+        ZStack{
             
-            Text("Viewing dish ID: \(dishId)")
-                .padding()
             
-            Spacer()
-            
-            Button(action: {
-                coordinator.navigateToRoot()
-            }) {
-                Label("Home", systemImage: "arrow.backward.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.red)
-                    )
-                    .shadow(color: .red.opacity(0.4), radius: 5, x: 0, y: 4)
-                    .contentShape(Rectangle())
+            Color(.bg)
+                .edgesIgnoringSafeArea(.all)
+            VStack{
+                AppToolbar(
+                    title: "Product",
+                    dismissAction: {
+                        coordinator.navigateBack()
+                    },
+                    homeAction: {
+                        
+                        coordinator.navigateToRoot()
+                    }
+                )
+                VStack(spacing:20){
+                    Text("DishDetailView")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.blue)
+                        .padding(.top,20)
+                    
+                    Text("Viewing dish ID: \(dishId)")
+                        .padding()
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        coordinator.navigateToRoot()
+                    }) {
+                        Label("Home", systemImage: "arrow.backward.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.red)
+                            )
+                            .shadow(color: .red.opacity(0.4), radius: 5, x: 0, y: 4)
+                            .contentShape(Rectangle())
+                    }
+                   
+                    .padding(.horizontal,40)
+                    
+                    
+                    
+                    Button("Back to Products") {
+                        coordinator.navigateBack()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .padding(.horizontal, 40)
+                    
+                    Button("Add To Cart") {
+                        coordinator.navigate(to: .home(.cartJourney))
+                    }
+                    .buttonStyle(PrimaryButtonStyle(backgroundColor: .orange))
+                    .padding(.horizontal, 40)
+                    Spacer()
+                }
             }
-           
-            .padding(.horizontal,40)
-            
-            
-            
-            Button("Back to Products") {
-                coordinator.navigateBack()
-            }
-            .buttonStyle(PrimaryButtonStyle())
-            .padding(.horizontal, 40)
-            
-            Button("Add To Cart") {
-                coordinator.navigate(to: .home(.cartJourney))
-            }
-            .buttonStyle(PrimaryButtonStyle(backgroundColor: .orange))
-            .padding(.horizontal, 40)
-            Spacer()
+            .frame( maxHeight: .infinity, alignment: .top)
+
+                .padding(.top, .topInsets)
         }
-       
+      
+        .ignoresSafeArea()
         
         
     }

@@ -53,6 +53,7 @@ struct CoordinatorView: View {
                 destination.destinationView()
                     .environmentObject(appState)
                     .environmentObject(coordinator)
+                    .navigationBarBackButtonHidden(true) // Hide back button for all destinations
             }
         }
         .environmentObject(coordinator)

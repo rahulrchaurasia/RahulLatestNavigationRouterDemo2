@@ -59,6 +59,23 @@ extension HomeFlow {
             DishDetailView(dishId: dishId)
         case .product:
             ProductView()
+        case .restaurants:
+           // RestaurantDetailView()
+            RestaurantView()
+        case .scrollTabSample:
+            ScrollviewTabSampleView()
+       
+        case let .collapsingToolbarSample(title, subtitle, rating, details, image, expandedHeight):
+            CollapsingHeaderView1(
+                title: title,
+                subtitle: subtitle ?? "", // ✅ unwrap or default
+                rating: rating,           // ✅ String (non-optional)
+                details: details,         // ✅ Optional, passed as-is
+                image: image,
+                expandedHeight: expandedHeight
+            )
+
+            
         }
     }
     

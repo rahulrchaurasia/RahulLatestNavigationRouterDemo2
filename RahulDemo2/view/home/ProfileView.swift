@@ -8,43 +8,56 @@
 import SwiftUI
 
 struct ProfileView: View {
-    
-    
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var appState: AppState
 
     var body: some View {
         
-        VStack{
-            Text("Profile")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.blue)
+        ZStack{
             
-            
-            Spacer()
-            Button {
+            Color(.bg)
+            VStack {
+                AppToolbar(
+                    title: "Profile",
+                    dismissAction: {
+                        coordinator.navigateBack()
+                    },
+                    statusBarColor: .green
+                )
                
+                VStack{
+                    Text("Profile")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.blue)
+                    
+                    Spacer()
+                    
+                    Button {
+                        appState.logout()
+                    } label: {
+                        Label("Logout", systemImage: "lock")
+                            .font(.title)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.red)
+                            )
+                    }
+                    
+                    Spacer()
+                }
                 
-                appState.logout()
-               // coordinator.logout()
-            } label: {
-               
-                Label("Logout", systemImage: "lock")
-                    .font(.title)
-                    .foregroundStyle(.white)
-                 
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius:  20)
-                        .fill(Color.red)
-                    )
             }
-            Spacer()
+            .frame( maxHeight: .infinity, alignment: .top)
 
+                .padding(.top, .topInsets)
+                .padding(.bottom, .bottomInsets)
+                .statusBarBackground(.statusBarColor) //extension of view
         }
-       
-        
-        
+        .ignoresSafeArea(.container, edges: .top)
+        //.ignoresSafeArea()
+     
     }
 }
 

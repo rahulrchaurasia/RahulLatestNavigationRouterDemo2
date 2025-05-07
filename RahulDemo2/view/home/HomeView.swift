@@ -18,6 +18,15 @@ struct HomeView: View {
                 .font(.largeTitle)
                 .padding()
             
+            
+            Button("Show Restaurant") {
+                // Direct approach
+                coordinator.navigate(to: .home(.restaurants))
+            }
+            .buttonStyle(PrimaryButtonStyle(backgroundColor: .orange))
+            .padding(.horizontal, 40)
+            Spacer()
+            
             Button("Go to Products") {
                 // Using the extension method approach
                 coordinator.navigate(to: HomeFlow.product.asDestination())
@@ -40,6 +49,7 @@ struct HomeView: View {
                 //coordinator.logout()
             }
             .padding(.top, 20)
+            Spacer()
         }
         
         
