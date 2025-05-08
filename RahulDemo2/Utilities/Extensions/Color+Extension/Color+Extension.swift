@@ -21,6 +21,11 @@ extension Color {
     static var toolBar: Color {
         return Color(hex: "#FAC898")
     }
+    
+    static var tabBar: Color {
+        return Color(hex: "#FFDADA")
+    }
+    
     static var primaryApp: Color {
         return Color(hex: "53B175")
     }

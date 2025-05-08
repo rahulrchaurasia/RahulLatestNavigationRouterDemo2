@@ -11,6 +11,8 @@ struct LoginView: View {
     
     @EnvironmentObject var coordinator: AppCoordinator
        @EnvironmentObject var appState: AppState
+    
+    @EnvironmentObject var loginViewModel : LoginViewModel
    
     var body: some View {
         
@@ -20,9 +22,11 @@ struct LoginView: View {
                 .padding()
             
             Button("Login") {
+                
+                loginViewModel.performLogin()
                 appState.login()
                 
-                coordinator.completeLogin()
+               // coordinator.completeLogin()  // coordinator will observe this and trigger completeLogin()
             }
             //  coordinator.navigate(to: HomeFlow.dishDetails.asDestination())
             Button("Forgot Password") {

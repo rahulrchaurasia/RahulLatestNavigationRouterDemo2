@@ -52,7 +52,8 @@ extension HomeFlow {
         case .home:
             HomeView()
         case .cartJourney:
-            CartJourneyDetailView()
+           // CartJourneyDetailView()
+            TransactionJourneyView()
         case .profile:
             ProfileView()
         case .dishDetails(let dishId):

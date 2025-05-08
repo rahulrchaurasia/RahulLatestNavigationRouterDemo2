@@ -13,25 +13,40 @@ import Combine
 
 final class AppState: ObservableObject {
     // Simple published properties without callbacks
-    @Published var hasCompletedOnboarding: Bool = false
-    @Published var isLoggedIn: Bool = false
+    @Published var hasCompletedOnboarding: Bool
+    @Published var isLoggedIn: Bool
     
-    // State transition methods
-    func resetToOnboarding() {
-        hasCompletedOnboarding = false
-        isLoggedIn = false
+    //Set here base on UserDefault Data Set
+    init() {
+        
+        self.hasCompletedOnboarding = UserDefaultsManager.shared.hasCompletedOnboarding
+        self.isLoggedIn = UserDefaultsManager.shared.isLoggedIn
     }
+    
 
     func completeOnboarding() {
         hasCompletedOnboarding = true
+        UserDefaultsManager.shared.hasCompletedOnboarding = true
     }
 
     func login() {
         isLoggedIn = true
+        UserDefaultsManager.shared.isLoggedIn = true
     }
 
     func logout() {
         isLoggedIn = false
+        UserDefaultsManager.shared.isLoggedIn = false // Set explicitly to false
+        UserDefaultsManager.shared.logoutUser() // Clear other user data
+    }
+    
+    //No used State transition methods
+    func resetToOnboarding() {
+        hasCompletedOnboarding = false
+              isLoggedIn = false
+              
+              UserDefaultsManager.shared.hasCompletedOnboarding = false
+              UserDefaultsManager.shared.isLoggedIn = false
     }
 }
 

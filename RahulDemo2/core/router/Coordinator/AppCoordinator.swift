@@ -27,41 +27,61 @@ class AppCoordinator: ObservableObject {
     @Published var currentFlow: AppFlow = .onboarding
     
     private var cancellables = Set<AnyCancellable>()
+    private let appState: AppState // Keep a strong reference to prevent early deallocation
     
-   // Observer Pattern with Closures
-
+    // Observer Pattern with Closures
+    
     init(appState: AppState) {
-            // Set initial flow based on app state
-            if appState.isLoggedIn {
-                currentFlow = .home
-            } else if appState.hasCompletedOnboarding {
-                currentFlow = .login
-            } else {
-                currentFlow = .onboarding
+        self.appState = appState // Store reference to appState
+        // Set initial flow based on app state
+        
+        updateCurrentFlow(basedOn: appState)
+        
+        // Observe changes to onboarding state
+        appState.$hasCompletedOnboarding
+            .dropFirst() // Skip initial value is fine for onboarding
+            .sink { [weak self] completed in
+                if completed && self?.currentFlow == .onboarding {
+                    self?.completeOnboarding()
+                }
             }
-            
-            // Observe changes to onboarding state
-            appState.$hasCompletedOnboarding
-                .dropFirst() // Skip initial value
-                .sink { [weak self] completed in
-                    if completed && self?.currentFlow == .onboarding {
-                        self?.completeOnboarding()
-                    }
-                }
-                .store(in: &cancellables)
-            
-            // Observe changes to login state
-            appState.$isLoggedIn
-                .dropFirst() // Skip initial value
-                .sink { [weak self] isLoggedIn in
-                    if isLoggedIn && self?.currentFlow == .login {
-                        self?.completeLogin()
-                    } else if !isLoggedIn && self?.currentFlow == .home {
-                        self?.logout()
-                    }
-                }
-                .store(in: &cancellables)
+            .store(in: &cancellables)
+        
+        // Observe changes to login state - more consistent handling
+        appState.$isLoggedIn
+            .dropFirst() // Skip initial value
+            .sink { [weak self] isLoggedIn in
+                self?.handleLoginStateChange(isLoggedIn)
+            }
+            .store(in: &cancellables)
+    }
+    
+    
+    // Helper method to encapsulate flow determination logic
+    private func updateCurrentFlow(basedOn appState: AppState) {
+        if appState.isLoggedIn {
+            currentFlow = .home
+        } else if appState.hasCompletedOnboarding {
+            currentFlow = .login
+        } else {
+            currentFlow = .onboarding
         }
+    }
+    
+    // Centralized handler for login state changes
+    private func handleLoginStateChange(_ isLoggedIn: Bool) {
+        if isLoggedIn {
+            // If logging in from login flow, proceed to home
+            if currentFlow == .login {
+                completeLogin()
+            }
+        } else {
+            // If logging out from any flow, go to login
+            // This is crucial - don't check current flow for logout
+            logout()
+        }
+    }
+        
     // Single navigation method
     func navigate(to destination: AppDestination) {
         navigationPath.append(destination)
@@ -102,15 +122,18 @@ class AppCoordinator: ObservableObject {
     func navigateBack(to destination: AppDestination) {
         
         // First check if the destination exists in the navigation path
-               guard navigationPath.contains(destination) else {
-                   // The destination doesn't exist in the current path
-                   print("Warning: Attempted to navigate back to a destination that's not in the navigation path")
-                   return
-               }
-               
-        // Find the index and navigate back
-                if let index = navigationPath.firstIndex(of: destination) {
-                    navigationPath = Array(navigationPath.prefix(through: index))
-                }
+        guard navigationPath.contains(destination) else {
+            // The destination doesn't exist in the current path
+            print("Warning: Attempted to navigate back to a destination that's not in the navigation path")
+            return
         }
+        
+        // Find the index and navigate back
+        if let index = navigationPath.firstIndex(of: destination) {
+            navigationPath = Array(navigationPath.prefix(through: index))
+        }
+    }
 }
+
+
+
