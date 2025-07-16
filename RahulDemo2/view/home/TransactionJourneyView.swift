@@ -158,6 +158,7 @@ struct TransactionJourneyView: View {
                }
            }
            .padding()
+            
        }
 }
 

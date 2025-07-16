@@ -20,5 +20,9 @@ extension View {
         )
     }
     
+    func backdrop<T: View>(_ content: T) -> some View {
+           self.background(content)
+       }
+    
     
 }

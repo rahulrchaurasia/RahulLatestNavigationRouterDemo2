@@ -145,4 +145,21 @@ extension Color {
             opacity: Double(a) / 255
         )
     }
+    
+    
+    
+    func interpolate(to: Color, fraction: CGFloat) -> Color {
+            let f = min(max(0, fraction), 1)
+            
+            guard let fromComponents = self.cgColor?.components, let toComponents = to.cgColor?.components else {
+                return self
+            }
+
+            let r = fromComponents[0] + (toComponents[0] - fromComponents[0]) * f
+            let g = fromComponents[1] + (toComponents[1] - fromComponents[1]) * f
+            let b = fromComponents[2] + (toComponents[2] - fromComponents[2]) * f
+            let a = fromComponents[3] + (toComponents[3] - fromComponents[3]) * f
+
+            return Color(red: Double(r), green: Double(g), blue: Double(b), opacity: Double(a))
+        }
 }
